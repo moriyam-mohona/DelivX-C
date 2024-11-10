@@ -1,8 +1,12 @@
+import { useContext } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
+import { AuthContext } from "../Firebase/AuthProvider";
+import toast from "react-hot-toast";
 
 const Signup = () => {
+  const { createUser } = useContext(AuthContext);
   const handleSignup = (e) => {
     e.preventDefault();
     const form = e.target;
@@ -12,6 +16,11 @@ const Signup = () => {
     const accept = form.accept.checked;
 
     console.log(name, email, password, accept);
+    createUser(email, password).then((result) => {
+      const user = result.user;
+      console.log(user);
+      toast.success("Sign Up Successfully");
+    });
   };
 
   const handleSocialLogin = () => {

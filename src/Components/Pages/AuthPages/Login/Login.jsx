@@ -6,9 +6,11 @@ import {
   LoadCanvasTemplate,
   validateCaptcha,
 } from "react-simple-captcha";
-import { useEffect, useRef, useState } from "react";
+import { useContext, useEffect, useRef, useState } from "react";
+import { AuthContext } from "../Firebase/AuthProvider";
 
 const Login = () => {
+  const { signIn } = useContext(AuthContext);
   const [btnDisable, setBtnDisable] = useState(true);
   const captchaRef = useRef(null);
 
@@ -34,6 +36,10 @@ const Login = () => {
     const password = form.password.value;
 
     console.log(email, password);
+    signIn(email, password).then((result) => {
+      const user = result.user;
+      console.log(user);
+    });
   };
 
   const handleSocialLogin = () => {
@@ -104,7 +110,7 @@ const Login = () => {
         </form>
         <p className="mt-4 text-center text-sm">
           Don’t have an account?{" "}
-          <Link to="/signup" className="text-teal font-medium">
+          <Link to="/Signup" className="text-teal font-medium">
             Sign up
           </Link>
         </p>

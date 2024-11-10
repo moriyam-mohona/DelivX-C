@@ -7,6 +7,7 @@ import Signup from "../Components/Pages/AuthPages/SignUp/SignUp";
 import Contact from "../Components/Pages/Contact/Contact";
 import About from "../Components/Pages/About/About";
 import Services from "../Components/Pages/Services/Services";
+import PrivateRoute from "./PrivateRoute";
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +25,11 @@ export const router = createBrowserRouter([
       },
       {
         path: "/About",
-        element: <About />,
+        element: (
+          <PrivateRoute>
+            <About />
+          </PrivateRoute>
+        ),
       },
       {
         path: "/Services",

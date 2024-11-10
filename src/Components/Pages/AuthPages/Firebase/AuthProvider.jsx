@@ -1,38 +1,41 @@
 import { createContext, useEffect, useState } from "react";
+import { app } from "./firebase.config";
 import {
   createUserWithEmailAndPassword,
   getAuth,
   GithubAuthProvider,
   GoogleAuthProvider,
-  //   onAuthStateChanged,
+  onAuthStateChanged,
   signInWithEmailAndPassword,
   signInWithPopup,
   signOut,
   updateProfile,
 } from "firebase/auth";
 // import useAxiosPublic from "../Hooks/useAxiosPublic";
-import { app } from "./firebase.config";
+const auth = getAuth(app);
 
-export const auth = getAuth(app);
+export const AuthContext = createContext(null);
 
-export const AuthContext = createContext();
 const AuthProvider = ({ children }) => {
   //   const axiosPublic = useAxiosPublic();
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState({});
 
-  //sign up with email and password
-  const signUp = (email, password) => {
+  //Create User with email and password
+  const createUser = (email, password) => {
+    setLoading(true);
     return createUserWithEmailAndPassword(auth, email, password);
   };
 
   //sign in with email and password
   const signIn = (email, password) => {
+    setLoading(true);
     return signInWithEmailAndPassword(auth, email, password);
   };
 
   //sign out
-  const logOut = () => {
+  const signout = () => {
+    setLoading(true);
     return signOut(auth);
   };
 
@@ -55,6 +58,16 @@ const AuthProvider = ({ children }) => {
     });
   };
 
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+      console.log("current User", currentUser);
+      setLoading(false);
+    });
+    return () => {
+      return unsubscribe();
+    };
+  }, []);
   //user data change
   //   useEffect(() => {
   //     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -81,9 +94,9 @@ const AuthProvider = ({ children }) => {
   const authInfo = {
     user,
     loading,
-    signUp,
+    createUser,
     signIn,
-    logOut,
+    signout,
     updatePro,
     signInWithGoogle,
     signInWithGitHub,
