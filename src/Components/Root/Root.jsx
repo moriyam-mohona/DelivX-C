@@ -1,15 +1,20 @@
-import { Outlet } from "react-router-dom";
+import { Outlet, useLocation } from "react-router-dom";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 
 const Root = () => {
+  const location = useLocation();
+  console.log(location);
+
+  const noHeaderFooter = location.pathname.includes("Login");
   return (
     <div>
-      <Navbar />
-      <div className="min-h-screen p-5">
+      {noHeaderFooter || <Navbar />}
+      <div className="min-h-screen p-5 my-5">
         <Outlet />
       </div>
-      <Footer />
+
+      {noHeaderFooter || <Footer />}
     </div>
   );
 };

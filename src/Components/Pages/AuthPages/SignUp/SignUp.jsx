@@ -1,16 +1,19 @@
-import { useState } from "react";
+import { FaGithub } from "react-icons/fa";
+import { FcGoogle } from "react-icons/fc";
 import { Link } from "react-router-dom";
 
 const Signup = () => {
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [userType, setUserType] = useState("User");
-  const [profileImage, setProfileImage] = useState("");
+  const handleSignup = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const password = form.password.value;
+    const accept = form.accept.checked;
 
-  const handleSignup = () => {
-    // Signup logic here
+    console.log(name, email, password, accept);
   };
+
   const handleSocialLogin = () => {
     // Social login logic here
   };
@@ -21,57 +24,63 @@ const Signup = () => {
         <h2 className="text-2xl font-semibold text-darkGray text-center">
           Sign Up
         </h2>
-        <form className="mt-6 space-y-4">
+        <form className="mt-6 space-y-4" onSubmit={handleSignup}>
           <input
             type="text"
+            name="name"
             placeholder="Name"
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-teal"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
           />
           <input
             type="email"
+            name="email"
             placeholder="Email"
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-teal"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
           />
           <input
             type="password"
+            name="password"
             placeholder="Password"
             className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-teal"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
           />
-          <input
-            type="text"
-            placeholder="Profile Image URL"
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-teal"
-            value={profileImage}
-            onChange={(e) => setProfileImage(e.target.value)}
-          />
-          <select
-            className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-teal"
-            value={userType}
-            onChange={(e) => setUserType(e.target.value)}
-          >
+
+          <select className="w-full p-3 border border-gray-300 rounded-md focus:outline-none focus:border-teal">
             <option value="User">User</option>
             <option value="DeliveryMen">Delivery Men</option>
           </select>
+          <div className="flex items-center">
+            <input type="checkbox" name="accept" className="mr-3" />
+            <label>
+              Accept our{" "}
+              <a href="terms" className="underline">
+                Terms & Conditions
+              </a>
+            </label>
+          </div>
           <button
-            type="button"
+            type="submit"
             className="w-full py-3 bg-teal text-white rounded-md font-semibold hover:bg-orange"
-            onClick={handleSignup}
           >
             Sign Up
           </button>
-          <button
-            type="button"
-            className="w-full py-3 bg-blueGray text-white rounded-md font-semibold hover:bg-blue-500"
-            onClick={handleSocialLogin}
-          >
-            Sign up with Google
-          </button>
+          <div className="w-full flex gap-4 items-center justify-center">
+            {/* Google Login */}
+            <button
+              type="button"
+              className="font-semibold text-2xl"
+              onClick={handleSocialLogin}
+            >
+              <FcGoogle />
+            </button>
+            {/* GitHub Login */}
+            <button
+              type="button"
+              className="font-semibold text-2xl text-black"
+              onClick={handleSocialLogin}
+            >
+              <FaGithub />
+            </button>
+          </div>
         </form>
         <p className="mt-4 text-center text-sm">
           Already have an account?{" "}
