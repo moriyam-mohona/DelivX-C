@@ -34,24 +34,23 @@ const AuthProvider = ({ children }) => {
   };
 
   //sign out
-  const signout = () => {
+  const logout = () => {
     setLoading(true);
     return signOut(auth);
   };
-
-  //update profile
+  //sign In With Google
   const googleProvider = new GoogleAuthProvider();
   const signInWithGoogle = () => {
     return signInWithPopup(auth, googleProvider);
   };
 
-  //sign In With Popup
+  //sign In With GitHub
   const gitHubProvider = new GithubAuthProvider();
   const signInWithGitHub = () => {
     return signInWithPopup(auth, gitHubProvider);
   };
 
-  //sign In With GitHub
+  //update profile
   const updatePro = (name) => {
     return updateProfile(auth.currentUser, {
       displayName: name,
@@ -96,7 +95,7 @@ const AuthProvider = ({ children }) => {
     loading,
     createUser,
     signIn,
-    signout,
+    logout,
     updatePro,
     signInWithGoogle,
     signInWithGitHub,

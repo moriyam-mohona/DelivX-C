@@ -15,12 +15,8 @@ export default {
 
         // Neutral Backgrounds
         lightGray: "gray-100", // Light gray background
-        mediumGray: "gray-200", // Slightly darker gray
-        blueGray: "blue-100", // Light blue for card or section backgrounds
-
-        // Text Colors
-        darkGray: "gray-800", // Dark gray text color
-        Gray: "gray-600", // Medium gray text color
+        darkGray: "gray-800",
+        Gray: "gray-600",
       },
     },
   },

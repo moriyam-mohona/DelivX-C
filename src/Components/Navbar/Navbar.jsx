@@ -1,22 +1,24 @@
 import { useContext, useState } from "react";
 import { IoNotifications } from "react-icons/io5";
 import { MdOutlineDeliveryDining } from "react-icons/md";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Pages/AuthPages/Firebase/AuthProvider";
 
 const Navbar = () => {
+  const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const toggleMenu = () => setIsOpen(!isOpen);
   const toggleDropdown = () => setIsDropdownOpen(!isDropdownOpen);
 
-  const { user, signout } = useContext(AuthContext);
+  const { user, logout } = useContext(AuthContext);
   console.log(user);
   const handleLogout = () => {
-    signout()
+    logout()
       .then(() => {})
       .catch((error) => console.log(error));
+    navigate("/Login");
   };
   return (
     <nav className="bg-teal text-white px-5 py-2">
@@ -59,7 +61,6 @@ const Navbar = () => {
                   />
                 </div>
               </div>
-
               {/* Dropdown Menu */}
               {isDropdownOpen && (
                 <div className="absolute right-0 mt-2 w-48 bg-white text-black rounded-lg shadow-lg z-10">
@@ -80,7 +81,7 @@ const Navbar = () => {
                     Logout
                   </button>
                 </div>
-              )}
+              )}{" "}
             </div>
           ) : (
             <Link to="/Login" className="text-lg">
