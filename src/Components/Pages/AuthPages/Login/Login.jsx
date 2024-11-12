@@ -11,11 +11,16 @@ import { AuthContext } from "../Firebase/AuthProvider";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import bg from "../../../../assets/bg.avif";
 import toast from "react-hot-toast";
+import SocialLogin from "../SocialLogin/SocialLogin";
 
 const Login = () => {
   const { signIn } = useContext(AuthContext);
   const [btnDisable, setBtnDisable] = useState(true);
   const [passVisible, setPassVisible] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [generalError, setGeneralError] = useState("");
+  const [captchaMessage, setCaptchaMessage] = useState("");
   const captchaRef = useRef(null);
   const navigate = useNavigate();
 
@@ -27,26 +32,58 @@ const Login = () => {
     const userCaptchaValue = captchaRef.current.value;
     if (validateCaptcha(userCaptchaValue)) {
       setBtnDisable(false);
-      toast.success("Captcha validated successfully!");
+      setCaptchaMessage("Captcha validated successfully!");
     } else {
       setBtnDisable(true);
-      toast.error("Captcha validation failed. Please try again.");
+      setCaptchaMessage("Captcha validation failed. Please try again.");
     }
   };
 
-  const handleLogin = (e) => {
+  const handleLogin = async (e) => {
     e.preventDefault();
     const form = e.target;
     const email = form.email.value;
     const password = form.password.value;
 
-    signIn(email, password).then((result) => {
+    // Clear previous error messages
+    setEmailError("");
+    setPasswordError("");
+    setGeneralError("");
+
+    if (!email.includes("@")) {
+      setEmailError("Please enter a valid email.");
+      return;
+    }
+
+    if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+      return;
+    }
+
+    try {
+      const result = await signIn(email, password);
       const user = result.user;
       console.log(user);
       navigate("/");
-
       toast.success("Login successfully");
-    });
+    } catch (error) {
+      switch (error.code) {
+        case "auth/wrong-password":
+          setGeneralError("Incorrect password. Please try again.");
+          break;
+        case "auth/user-not-found":
+          setGeneralError(
+            "User not found. Please check your email or sign up."
+          );
+          break;
+        case "auth/too-many-requests":
+          setGeneralError("Too many attempts. Try again later.");
+          break;
+        default:
+          setGeneralError("Failed to log in. Please try again later.");
+          break;
+      }
+    }
   };
 
   const handleSocialLogin = () => {
@@ -74,6 +111,8 @@ const Login = () => {
             placeholder="Email"
             className="w-full p-2 border border-lightGray rounded-md focus:outline-none focus:border-teal"
           />
+          {emailError && <p className="text-sm text-red">{emailError}</p>}
+
           <div className="relative">
             <input
               type={passVisible ? "text" : "password"}
@@ -88,6 +127,8 @@ const Login = () => {
               {passVisible ? <LuEyeOff /> : <LuEye />}
             </span>
           </div>
+          {passwordError && <p className="text-sm text-red">{passwordError}</p>}
+
           {/* ReCaptcha */}
           <div
             style={{
@@ -103,8 +144,8 @@ const Login = () => {
             <input
               type="text"
               ref={captchaRef}
-              placeholder="Type the text above"
-              className="w-full  p-2 rounded-l-md focus:outline-none "
+              placeholder="Type the captcha"
+              className="w-full p-2 rounded-l-md focus:outline-none"
             />
             <button
               type="button"
@@ -114,7 +155,9 @@ const Login = () => {
               Validate
             </button>
           </div>
-
+          {captchaMessage && (
+            <p className="text-sm text-red">{captchaMessage}</p>
+          )}
           <button
             disabled={btnDisable}
             type="submit"
@@ -128,8 +171,10 @@ const Login = () => {
             Login
           </button>
 
+          {generalError && <p className="text-sm text-red">{generalError}</p>}
+
           {/* Social Login */}
-          <div className="w-full flex gap-4 items-center justify-center">
+          {/* <div className="w-full flex gap-4 items-center justify-center">
             <button
               type="button"
               className="font-semibold text-2xl"
@@ -144,9 +189,10 @@ const Login = () => {
             >
               <FaGithub />
             </button>
-          </div>
+          </div> */}
+          <SocialLogin />
         </form>
-        <p className="mt-4 text-center text-sm">
+        <p className="mt-4 text-center text-base">
           Don’t have an account?{" "}
           <Link to="/Signup" className="text-white font-medium underline">
             Sign up

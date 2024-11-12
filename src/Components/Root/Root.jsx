@@ -12,12 +12,12 @@ const Root = () => {
       {noHeaderFooter || <Navbar />}
 
       {/* Outlet  */}
-      <div className="relative min-h-screen p-5 my-5">
+      <div className="relative min-h-screen ">
         <div
           className="absolute w-full h-full min-h-screen bg-cover bg-center filter blur-md opacity-80"
           style={{ backgroundImage: `url(${bg})` }}
         ></div>
-        <div className="relative">
+        <div className="relative px-10">
           <Outlet />
         </div>
       </div>

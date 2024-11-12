@@ -3,32 +3,32 @@ const Footer = () => {
 
   return (
     <>
-      <footer className="footer text-white p-10">
+      <footer className="footer grid grid-cols-12 gap-10 bg-darkGray border-t text-white py-20 px-10 md:px-16 lg:px-28 overflow-x-hidden">
         {/* Services Section */}
-        <nav>
+        <nav className="col-span-4 md:col-span-3">
           <h6 className="footer-title">Services</h6>
           <a className="link link-hover">Branding</a>
           <a className="link link-hover">Design</a>
           <a className="link link-hover">Marketing</a>
           <a className="link link-hover">Advertisement</a>
         </nav>
-
         {/* Company Section */}
-        <nav>
+        <nav className="col-span-4 md:col-span-3">
           <h6 className="footer-title">Company</h6>
           <a className="link link-hover">About us</a>
           <a className="link link-hover">Contact</a>
           <a className="link link-hover">Jobs</a>
           <a className="link link-hover">Press kit</a>
         </nav>
-        <nav>
+        {/* Legal Section  */}
+        <nav className="col-span-4 md:col-span-3">
           <h6 className="footer-title">Legal</h6>
           <a className="link link-hover">Terms of use</a>
           <a className="link link-hover">Privacy policy</a>
           <a className="link link-hover">Cookie policy</a>
         </nav>
         {/* Social Media Section */}
-        <nav>
+        <nav className="col-span-12 md:col-span-3 items-center">
           <h6 className="footer-title">Social</h6>
           <div className="grid grid-flow-col gap-4">
             <a
@@ -79,8 +79,9 @@ const Footer = () => {
           </div>
         </nav>
       </footer>
+
+      {/* Copyright Section */}
       <footer className="footer footer-center">
-        {/* Copyright Section */}
         <aside className=" bg-teal text-white rounded-t p-4 w-full">
           <p>
             Copyright © {currentYear} - All rights reserved by ACME Industries

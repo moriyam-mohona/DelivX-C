@@ -7,14 +7,13 @@ export default {
     extend: {
       colors: {
         // Core Colors
-        teal: "teal", // Primary teal color
-        orange: "orange", // Secondary orange color
-        green: "green", // Green for success
-        yellow: "yellow", // Yellow for warning
-        red: "red", // Red for errors
+        teal: "teal",
+        orange: "orange",
+        green: "green",
+        yellow: "yellow",
+        red: "red",
 
-        // Neutral Backgrounds
-        lightGray: "gray-100", // Light gray background
+        lightGray: "gray-100",
         darkGray: "gray-800",
         Gray: "gray-600",
       },

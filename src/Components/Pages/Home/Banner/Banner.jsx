@@ -1,15 +1,20 @@
+import bg from "../../../../assets/bg.avif";
 const Banner = () => {
   return (
     <>
       <section
-        className="flex items-center justify-center bg-cover bg-center my-10"
+        className="relative flex items-center justify-center bg-cover bg-center border-b"
         // style={{ backgroundImage: `url('your-image.jpg')` }}
       >
-        <div className="text-center text-darkGray max-w-xl mx-auto ">
-          <h1 className="text-4xl md:text-5xl font-bold text-teal">
+        <div
+          className="absolute w-full h-full  bg-cover blur-sm bg-center"
+          style={{ backgroundImage: `url(${bg})` }}
+        ></div>
+        <div className="relative text-center text-darkGray max-w-xl mx-auto my-20">
+          <h1 className="text-4xl md:text-5xl font-bold text-white">
             Unlock Your Potential
           </h1>
-          <p className="mt-4 text-lg md:text-xl text-Gray">
+          <p className="mt-4 text-base md:text-lg text-white ">
             Take control with our powerful, easy-to-use tools designed just for
             you.
           </p>

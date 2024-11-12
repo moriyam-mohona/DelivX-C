@@ -3,7 +3,6 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { Link, useNavigate } from "react-router-dom";
 import { AuthContext } from "../Firebase/AuthProvider";
-import toast from "react-hot-toast";
 import { LuEye, LuEyeOff } from "react-icons/lu";
 import bg from "../../../../assets/bg.avif";
 
@@ -11,31 +10,48 @@ const Signup = () => {
   const { createUser, updatePro } = useContext(AuthContext);
   const navigate = useNavigate();
   const [passVisible, setPassVisible] = useState(false);
-  const [acceptTerms, setAcceptTerms] = useState(false); // State for accept checkbox
+  const [acceptTerms, setAcceptTerms] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [generalError, setGeneralError] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
-  const handleSignup = (e) => {
+  const handleSignup = async (e) => {
     e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+
+    setEmailError("");
+    setPasswordError("");
+    setGeneralError("");
+
+    if (!email.includes("@")) {
+      setEmailError("Please enter a valid email.");
+      return;
+    }
+    if (password.length < 6) {
+      setPasswordError("Password must be at least 6 characters long.");
+      return;
+    }
+
     if (!acceptTerms) {
       alert("Please accept our Terms & Conditions to proceed.");
       return;
     }
-    const form = e.target;
-    const name = form.name.value;
-    const email = form.email.value;
-    const password = form.password.value;
 
-    createUser(email, password).then((result) => {
+    try {
+      const result = await createUser(email, password);
       const user = result.user;
-      updatePro(name)
-        .then(() => console.log("Profile updated"))
-        .catch((error) => console.log(error));
+      await updatePro(name);
       navigate("/");
-      toast.success("Sign Up Successfully");
-    });
-  };
-
-  const handleSocialLogin = () => {
-    // Social login logic here
+    } catch (error) {
+      if (error.message.includes("already in use")) {
+        setGeneralError("User with this email already exists.");
+      } else {
+        setGeneralError("Failed to sign up. Please try again.");
+      }
+    }
   };
 
   const togglePassVisible = () => {
@@ -43,7 +59,25 @@ const Signup = () => {
   };
 
   const handleCheckboxChange = (e) => {
-    setAcceptTerms(e.target.checked); // Update acceptTerms state based on checkbox
+    setAcceptTerms(e.target.checked);
+  };
+
+  const handleEmailChange = (e) => {
+    const value = e.target.value;
+    setEmail(value);
+    setEmailError(value.includes("@") ? "" : "Please enter a valid email.");
+  };
+
+  const handlePasswordChange = (e) => {
+    const value = e.target.value;
+    setPassword(value);
+    setPasswordError(
+      value.length >= 6 ? "" : "Password must be at least 6 characters long."
+    );
+  };
+
+  const handleSocialLogin = () => {
+    console.log("social");
   };
 
   return (
@@ -59,23 +93,33 @@ const Signup = () => {
         </h2>
         <form className="mt-6 space-y-3" onSubmit={handleSignup}>
           <input
+            required
             type="text"
             name="name"
             placeholder="Name"
             className="w-full p-2 border border-lightGray rounded-md focus:outline-none focus:border-teal"
           />
+
           <input
+            required
             type="email"
             name="email"
             placeholder="Email"
+            value={email}
+            onChange={handleEmailChange}
             className="w-full p-2 border border-lightGray rounded-md focus:outline-none focus:border-teal"
           />
+          {emailError && <p className="text-sm text-red">{emailError}</p>}
+
           <div className="relative">
             <input
+              required
               type={passVisible ? "text" : "password"}
               name="password"
               placeholder="Password"
-              className=" w-full p-2 border border-lightGray rounded-md focus:outline-none focus:border-teal"
+              value={password}
+              onChange={handlePasswordChange}
+              className="w-full p-2 border border-lightGray rounded-md focus:outline-none focus:border-teal"
             />
             <span
               className="absolute inset-y-0 right-0 flex items-center pr-3 cursor-pointer"
@@ -84,6 +128,7 @@ const Signup = () => {
               {passVisible ? <LuEyeOff /> : <LuEye />}
             </span>
           </div>
+          {passwordError && <p className="text-sm text-red">{passwordError}</p>}
 
           <select className="w-full p-2 border border-lightGray rounded-md focus:outline-none focus:border-teal">
             <option value="User">User</option>
@@ -92,6 +137,7 @@ const Signup = () => {
 
           <div className="flex items-center">
             <input
+              required
               type="checkbox"
               name="accept"
               className="mr-3"
@@ -104,6 +150,7 @@ const Signup = () => {
               </a>
             </label>
           </div>
+
           <button
             type="submit"
             disabled={!acceptTerms}
@@ -116,19 +163,21 @@ const Signup = () => {
             Sign Up
           </button>
 
+          {generalError && <p className="text-sm text-red">{generalError}</p>}
+
           {/* Social Login */}
           <div className="w-full flex gap-4 items-center justify-center">
             <button
               type="button"
               className="font-semibold text-2xl"
-              onClick={handleSocialLogin}
+              onClick={() => handleSocialLogin()}
             >
               <FcGoogle />
             </button>
             <button
               type="button"
               className="font-semibold text-2xl text-black"
-              onClick={handleSocialLogin}
+              onClick={() => handleSocialLogin()}
             >
               <FaGithub />
             </button>
